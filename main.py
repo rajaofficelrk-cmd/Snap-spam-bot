@@ -1,64 +1,32 @@
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Hello"
 import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys  # ✅ FIX: missing import
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import random
+import requests
 
+class SnapSpamBot:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+        self.session = requests.Session()
 
-def send_snapchat_message(username, password, message, recipient):
-    driver = webdriver.Chrome()
-    wait = WebDriverWait(driver, 15)
+    def login(self):
+        # Placeholder for the login logic
+        print(f'Logging in as {self.username}')
+        # Simulate successful login
+        time.sleep(1)
+        return True
 
-    try:
-        driver.get("https://accounts.snapchat.com/accounts/login")
+    def send_spam(self, message, count):
+        if self.login():
+            for _ in range(count):
+                # Placeholder for message sending logic
+                print(f'Sending message: {message}')
+                time.sleep(random.uniform(0.5, 2.0))
 
-        # Login
-        wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys(username)
-        wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys(password)
+if __name__ == '__main__':
+    bot = SnapSpamBot('your_username', 'your_password')
+    bot.send_spam('This is a spam message!', 10)@app.errorhandler(413)
+def too_large(e):
+    return jsonify({"success": False, "error": "File too large. Maximum size is 16MB"}), 413
 
-        # Submit login
-        driver.find_element(By.NAME, "password").send_keys(Keys.RETURN)
-
-        # Wait for navigation (this might change; adjust for your actual flow)
-        wait.until(EC.url_contains("snapchat.com"))
-
-        # Navigate to chat/profile (may not be directly accessible without challenges)
-        driver.get(f"https://story.snapchat.com/@{recipient}")
-
-        # Wait for message input (selector likely to change; update based on your page)
-        msg_box = wait.until(
-            EC.presence_of_element_located((By.XPATH, "//textarea[@placeholder='Message']"))
-        )
-        msg_box.send_keys(message)
-
-        # Send (button may be better than ENTER)
-        msg_box.send_keys(Keys.RETURN)
-
-        time.sleep(2)
-
-    finally:
-        driver.quit()
-
-
-if __name__ == "__main__":from flask import Flask
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Hello"
-    send_snapchat_message(
-        "your_username",
-        "your_password",
-        "Hello!",
-        "recipient_username"
-    )if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
