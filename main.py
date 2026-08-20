@@ -24,9 +24,14 @@ class SnapSpamBot:
 
 if __name__ == '__main__':
     bot = SnapSpamBot('your_username', 'your_password')
-    bot.send_spam('This is a spam message!', 10)@app.errorhandler(413)
-def too_large(e):
-    return jsonify({"success": False, "error": "File too large. Maximum size is 16MB"}), 413
+    bot.send_spam('This is a spam message!', 10)
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "RK Raja Bot is running!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    app.run(host="0.0.0.0", port=10000)
