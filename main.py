@@ -41,7 +41,16 @@ def send_snapchat_message(username, password, message, recipient):
         driver.quit()
 
 
+if __name__ == "__main__":from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Hello"
+
 if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
     send_snapchat_message(
         "your_username",
         "your_password",
