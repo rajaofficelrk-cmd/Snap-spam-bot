@@ -1,3 +1,10 @@
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Hello"
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -48,12 +55,10 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return "Hello"
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
     send_snapchat_message(
         "your_username",
         "your_password",
         "Hello!",
         "recipient_username"
-    )
+    )if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
