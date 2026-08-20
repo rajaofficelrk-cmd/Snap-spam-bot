@@ -1,47 +1,30 @@
-# Snapchat Spam Bot
-
 import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# Function to send messages
 def send_snapchat_message(username, password, message, recipient):
-    driver = webdriver.Chrome()  # Ensure you have the ChromeDriver installed
+    driver = webdriver.Chrome()
     driver.get("https://accounts.snapchat.com/accounts/login")
+    wait = WebDriverWait(driver, 10)
+
+    # Login
+    wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys(username)
+    driver.find_element(By.NAME, "password").send_keys(password)
+    driver.find_element(By.NAME, "password").send_keys(Keys.RETURN)
+
+    # Wait for login to complete
+    wait.until(EC.url_contains("https://story.snapchat.com/"))
+
+    # Navigate to chat (use correct URL pattern)
+    driver.get(f"https://story.snapchat.com/@{recipient}")
+    wait.until(EC.presence_of_element_located((By.XPATH, "//textarea[@placeholder='Message']"))).send_keys(message)
+    driver.find_element(By.XPATH, "//textarea[@placeholder='Message']").send_keys(Keys.RETURN)
 
     time.sleep(2)
-
-    # Log in to Snapchat
-    username_input = driver.find_element_by_name("username")
-    password_input = driver.find_element_by_name("password")
-
-    username_input.send_keys(username)
-    password_input.send_keys(password)
-    password_input.send_keys(Keys.RETURN)
-
-    time.sleep(5)
-
-    # Navigate to the chat
-    driver.get(f"https://story.snapchat.com/{recipient}")
-
-    time.sleep(2)
-
-    # Send the message
-    message_input = driver.find_element_by_xpath("//textarea[@placeholder='Message']")
-    message_input.send_keys(message)
-    message_input.send_keys(Keys.RETURN)
-
-    time.sleep(2)
-
     driver.quit()
 
-# Example usage
+# Example (single send – do not loop for spam)
 if __name__ == "__main__":
-    USERNAME = "your_username"
-    PASSWORD = "your_password"
-    MESSAGE = "Hello! This is a spam message."
-    RECIPIENT = "recipient_username"
-
-    for _ in range(10):  # Send the message 10 times
-        send_snapchat_message(USERNAME, PASSWORD, MESSAGE, RECIPIENT)
-        time.sleep(5)  # Wait 5 seconds between messages
+    send_snapchat_message("your_username", "your_password", "Hello!", "recipient_username")
